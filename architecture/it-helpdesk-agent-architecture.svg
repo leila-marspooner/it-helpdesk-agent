@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">IT Helpdesk Agent Architecture</title>
+  <desc id="desc">Public-safe architecture diagram for the V2 authenticated IT Helpdesk Agent.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f9fb; }
+      .box { fill: #ffffff; stroke: #1f2937; stroke-width: 2; rx: 8; }
+      .box-blue { fill: #e8f1ff; stroke: #1d4ed8; }
+      .box-green { fill: #e8f7ee; stroke: #15803d; }
+      .box-amber { fill: #fff7e6; stroke: #b45309; }
+      .box-purple { fill: #f1eafe; stroke: #7e22ce; }
+      .box-slate { fill: #edf2f7; stroke: #475569; }
+      .label { font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; fill: #111827; }
+      .text { font-family: Arial, Helvetica, sans-serif; font-size: 15px; fill: #1f2937; }
+      .small { font-family: Arial, Helvetica, sans-serif; font-size: 13px; fill: #374151; }
+      .arrow { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+      .note { fill: #fff; stroke: #64748b; stroke-dasharray: 5 4; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#334155" />
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1280" height="760" />
+  <text class="label" x="52" y="48">IT Helpdesk Agent - V2 Authenticated Architecture</text>
+  <text class="text" x="52" y="76">Power Platform portfolio/demo project demonstrating production-aligned patterns</text>
+
+  <rect class="box box-blue" x="52" y="128" width="230" height="104" />
+  <text class="label" x="76" y="164">Signed-in user</text>
+  <text class="text" x="76" y="192">Entra ID / organizational</text>
+  <text class="text" x="76" y="214">sign-in configured and tested</text>
+
+  <rect class="box box-blue" x="352" y="116" width="266" height="132" />
+  <text class="label" x="376" y="152">IT Support (Portfolio)</text>
+  <text class="text" x="376" y="180">Copilot Studio agent</text>
+  <text class="text" x="376" y="204">Ticket intake, status checks,</text>
+  <text class="text" x="376" y="228">urgent escalation</text>
+
+  <rect class="box box-green" x="688" y="92" width="260" height="184" />
+  <text class="label" x="712" y="128">Power Automate</text>
+  <text class="text" x="712" y="158">Helper - Create Ticket</text>
+  <text class="text" x="712" y="182">Helper - Check Status</text>
+  <text class="text" x="712" y="206">Helper - Escalate Ticket</text>
+  <text class="text" x="712" y="230">Automation - Notify Manager</text>
+  <text class="text" x="712" y="254">SLA watcher</text>
+
+  <rect class="box box-slate" x="1018" y="116" width="210" height="132" />
+  <text class="label" x="1042" y="152">Dataverse</text>
+  <text class="text" x="1042" y="180">IT Ticket / IT Tickets</text>
+  <text class="text" x="1042" y="204">State, identity, summary,</text>
+  <text class="text" x="1042" y="228">audit and SLA fields</text>
+
+  <rect class="box box-amber" x="688" y="356" width="260" height="132" />
+  <text class="label" x="712" y="392">Microsoft Teams</text>
+  <text class="text" x="712" y="420">Adaptive Card notification</text>
+  <text class="text" x="712" y="444">Manager acknowledgement</text>
+  <text class="text" x="712" y="468">Dataverse write-back</text>
+
+  <rect class="box box-purple" x="352" y="344" width="266" height="156" />
+  <text class="label" x="376" y="380">SummariseTicket_BYOM</text>
+  <text class="text" x="376" y="408">Child flow</text>
+  <text class="text" x="376" y="432">Azure OpenAI HTTP call</text>
+  <text class="text" x="376" y="456">Fallback summary</text>
+  <text class="text" x="376" y="480">Dataverse write-back</text>
+
+  <rect class="box box-purple" x="52" y="356" width="230" height="132" />
+  <text class="label" x="76" y="392">Azure OpenAI</text>
+  <text class="text" x="76" y="420">Azure AI Foundry</text>
+  <text class="text" x="76" y="444">BYOM deployment</text>
+  <text class="text" x="76" y="468">No secrets in repo</text>
+
+  <rect class="box note" x="52" y="576" width="538" height="104" />
+  <text class="label" x="76" y="612">Secure configuration</text>
+  <text class="text" x="76" y="640">Environment variables store endpoint, deployment name, API version and prompt.</text>
+  <text class="text" x="76" y="664">API key uses Azure Key Vault / Power Platform secret environment variables.</text>
+
+  <rect class="box note" x="688" y="576" width="540" height="104" />
+  <text class="label" x="712" y="612">Governance</text>
+  <text class="text" x="712" y="640">RBAC, Field-Level Security, connection references and ALM packaging.</text>
+  <text class="text" x="712" y="664">Idempotent watcher patterns use NotificationSent and escalation flags.</text>
+
+  <path class="arrow" d="M282 180 H352" />
+  <path class="arrow" d="M618 180 H688" />
+  <path class="arrow" d="M948 184 H1018" />
+  <path class="arrow" d="M818 276 V356" />
+  <path class="arrow" d="M688 436 H618" />
+  <path class="arrow" d="M352 422 H282" />
+  <path class="arrow" d="M485 344 V248" />
+  <path class="arrow" d="M948 424 C1038 424 1068 328 1098 248" />
+  <path class="arrow" d="M1058 248 C1018 320 968 376 948 400" />
+  <path class="arrow" d="M590 628 H688" />
+
+  <text class="small" x="52" y="724">Public-safe diagram: no tenant URLs, endpoint values, subscription IDs, directory IDs, vault URIs, environment IDs or secret values.</text>
+</svg>

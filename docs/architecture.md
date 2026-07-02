@@ -1,187 +1,147 @@
 # Architecture
 
-## High-Level Architecture
+## Overview
 
-The IT Helpdesk Agent uses Copilot Studio as the user-facing agent, Power Automate as the orchestration layer, Dataverse as the system of record, and a planned model-driven app for technician handoff. The authenticated Copilot Studio experience using Entra ID / organizational sign-in has been configured and tested.
+The IT Helpdesk Agent uses Copilot Studio, Power Automate, Dataverse, Microsoft Teams, and Azure OpenAI / Azure AI Foundry to support an authenticated V2 helpdesk workflow.
+
+The architecture is built around trusted identity, Dataverse state tracking, idempotent watcher flows, Teams Adaptive Card write-back, and secure BYOM summarisation.
+
+See the public architecture diagram in [architecture/it-helpdesk-agent-architecture.svg](../architecture/it-helpdesk-agent-architecture.svg).
+
+## High-Level Flow
 
 ```text
 Signed-in user
-    |
-    v
-IT Support (Portfolio)
-    |
-    v
-Power Automate helper flows
-    |
-    v
-Dataverse IT Ticket / IT Tickets
-    |
-    +--> Automation - Notify Manager
-    |
-    +--> IT Technician Console
+  -> IT Support (Portfolio)
+  -> Power Automate helper flows
+  -> Dataverse IT Ticket / IT Tickets
+  -> Teams Adaptive Cards / Technician Console / SLA watchers
+  -> SummariseTicket_BYOM
+  -> Azure OpenAI / Azure AI Foundry
 ```
 
-The design goal is to keep the user experience simple while moving authorization, ticket updates, escalation handling, and audit tracking into governed Power Platform services.
+## Copilot Studio Layer
 
-## Copilot Studio Role
+`IT Support (Portfolio)` provides the authenticated V2 agent experience.
 
-`IT Support (Portfolio)` is the authenticated conversation layer. The sign-in requirement is built and tested, and identity-based user context is built and tested.
+Built capabilities:
 
-It is responsible for:
+- Entra ID / organizational sign-in configured and tested.
+- Identity-based user context built and tested.
+- Structured ticket intake.
+- Ticket status checks.
+- Urgent escalation.
+- No typed email used for authorization.
 
-- Requiring organizational sign-in for protected actions.
-- Collecting ticket details in a structured way.
-- Calling `Helper - Create Ticket`, `Helper - Check Status`, and `Helper - Escalate Ticket`.
-- Passing signed-in identity values into flows.
-- Presenting clear outcomes to the user.
-- Handling known return states such as `NotFound`, `NotAuthorized`, `AlreadyEscalated`, `InvalidFormat`, and `Success`.
+The agent calls Power Automate helper flows and passes signed-in identity values into the orchestration layer.
 
-The agent should not perform authorization by asking the user to type or confirm their email address.
+## Power Automate Orchestration Layer
 
-## Power Automate Role
+Power Automate contains the operational logic behind the agent.
 
-Power Automate contains the process logic that supports the agent.
+Built flows:
 
-### Helper - Create Ticket
+- `Helper - Create Ticket`
+- `Helper - Check Status`
+- `Helper - Escalate Ticket`
+- `Automation - Notify Manager`
+- `SummariseTicket_BYOM`
+- SLA watcher / SLA escalation watcher
 
-Creates a new Dataverse ticket and stores requestor identity fields:
+Power Automate is responsible for Dataverse writes, ownership validation, manager notifications, acknowledgement write-back, SLA monitoring, and AI summary generation.
 
-- `RequestorAadObjectId`
-- `RequestorUPN`
-- `RequestorDisplayName`
+## Dataverse System Of Record
 
-It returns the user-facing `TicketID`, status, priority, and assigned team.
+Dataverse `IT Ticket` / `IT Tickets` is the system of record.
 
-### Helper - Check Status
+It stores:
 
-Looks up a ticket by `TicketID` and checks whether the signed-in user owns it.
+- Ticket state and user-facing ticket details.
+- Requestor identity.
+- Escalation state and audit fields.
+- Teams notification and acknowledgement fields.
+- SLA and reminder fields.
+- AI-generated summary fields.
+- Dataverse `Status` and `Status Reason`.
 
-Authorization pattern:
+Ticket references use `TKT####`, for example `TKT1001`.
+
+## Authentication And Authorization
+
+The authenticated experience uses Entra ID / organizational sign-in.
+
+Ownership is enforced by comparing:
 
 ```text
 RequestorAadObjectId == CurrentUserAadObjectId
 ```
 
-If the check fails, the flow returns `NotAuthorized` instead of ticket details.
+This model prevents users from relying on typed email addresses for authorization. Status checks and escalation updates only proceed when the signed-in user owns the ticket.
 
-### Helper - Escalate Ticket
+## Teams Adaptive Card Write-Back
 
-Validates and escalates a ticket.
+`Automation - Notify Manager` sends Teams Adaptive Cards for escalation visibility and manager acknowledgement.
 
-The intended logic is:
+The acknowledgement action writes back to Dataverse fields such as:
 
-1. Normalize the ticket reference.
-2. Validate the `TKT####` style format, for example `TKT1001`.
-3. Look up the ticket in Dataverse.
-4. Return `NotFound` if no row exists.
-5. Check `AlreadyEscalated` before making another update.
-6. Check ownership using `CurrentUserAadObjectId`.
-7. Update escalation fields when valid and authorized.
-8. Return a clear status flag to Copilot Studio.
+- `AcknowledgedOn`
+- `AcknowledgedByAadObjectId`
+- `AcknowledgedByDisplayName`
+- `AcknowledgedByEmail`
 
-Important implementation detail:
+Notification state is tracked with fields such as `NotificationSent`, `NotificationSentOn`, `ManagerNotified`, `ManagerNotifiedOn`, and `CardSentOn`.
 
-- Dataverse Update row must use the Dataverse primary key GUID, not the user-facing `TicketID`.
+## BYOM Azure OpenAI Summarisation
 
-### Automation - Notify Manager
+`SummariseTicket_BYOM` is a child flow that creates ticket summaries using Azure OpenAI / Azure AI Foundry.
 
-The watcher flow is intended to send one notification after escalation.
+The child flow uses:
 
-Trigger condition:
+- A stable child-flow input contract.
+- Environment-variable driven configuration.
+- Secure API key handling.
+- HTTP call to Azure OpenAI.
+- Expression-based AI response parsing.
+- TRY/CATCH fallback summary behavior.
+- Dataverse write-back to summary fields.
 
-- `Escalated` is true.
-- `NotificationSent` is not true.
+Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
 
-After notification, the flow should update:
+The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
 
-- `NotificationSent`
-- `NotificationSentOn`
+## SLA Watcher And Director Escalation
 
-If notification fails, it should store `NotificationError` and leave `NotificationSent` false so the notification can be retried.
+The SLA watcher / SLA escalation watcher monitors ticket state and supports reminder and escalation patterns.
 
-## Dataverse Role
+Relevant Dataverse fields include:
 
-Dataverse stores tickets and the audit fields needed for secure self-service.
+- `ReminderCount`
+- `LastReminderOn`
+- `EscalatedToDirector`
+- `DirectorEscalatedOn`
 
-The central table is `IT Ticket` / `IT Tickets`.
+The watcher pattern is designed to be idempotent and auditable.
 
-Main groups of fields:
+## Field-Level Security And RBAC
 
-| Field Group | Examples |
-| --- | --- |
-| Ticket details | `TicketID`, `Subject`, `TicketDescription`, `TicketStatus`, `Priority`, `Category`, `Impact`, `Urgency` |
-| Assignment | `AssignedTeam`, `ResolutionSummary`, `LastUpdatedOn` |
-| Requestor identity | `RequestorAadObjectId`, `RequestorUPN`, `RequestorDisplayName` |
-| Escalation audit | `Escalated`, `EscalatedOn`, `EscalatedByAadObjectId`, `EscalationReason`, `EscalationCount` |
-| Notification tracking | `NotificationSent`, `NotificationSentOn`, `NotificationError` |
-| Review tracking | `AcknowledgedByAadObjectId`, `AcknowledgedByDisplayName`, `AcknowledgedOn` |
+The solution uses RBAC / least-privilege thinking so employees, technicians, and escalation owners have appropriate access.
 
-Dataverse also provides security roles, auditability, and a shared data model for the model-driven app.
+Field-Level Security is used for decision, acknowledgement, and escalation fields so sensitive operational fields are not broadly editable.
 
-## Model-Driven App / Technician Console Role
+## ALM And Governance
 
-`IT Technician Console` is the planned technician-facing model-driven app.
+The solution uses:
 
-Its intended role is to:
+- `ITHelpdeskPortfolio` as the solution name.
+- `lai` as the publisher prefix.
+- Environment variables for configuration.
+- Power Platform secret environment variables / Azure Key Vault for secure secret handling.
+- Connection references for deployable flows.
+- Unmanaged solutions for build.
+- Managed solutions for deployment.
+- Dataverse state tracking for auditability.
+- No secrets or private tenant-specific details in the repo.
 
-- Show escalated tickets.
-- Let technicians triage priority work.
-- Review requestor and escalation audit fields.
-- Update ticket status, assignment, and resolution notes.
-- Provide a controlled handoff point between the agent and human support staff.
+## Public Safety
 
-This component should be presented as planned or work in progress until screenshots and implementation evidence are added.
-
-## Authentication And Authorization
-
-The project uses Entra ID / organizational sign-in for protected actions. This authenticated experience is configured and tested.
-
-The important design decision is to use trusted identity values from the signed-in session instead of user-entered email addresses. The identity-based user context is built and tested; ownership checks are built but still need final public screenshot evidence before being presented visually in the repo.
-
-Key fields:
-
-- `RequestorAadObjectId`: stored on the ticket when it is created.
-- `CurrentUserAadObjectId`: passed from the current signed-in session.
-
-For status checks and escalation, the flow compares those values before returning or changing protected ticket details.
-
-Expected outcomes:
-
-| Outcome | Meaning |
-| --- | --- |
-| `Success` | The action was valid and authorized |
-| `InvalidFormat` | The ticket reference does not match the expected format |
-| `NotFound` | No matching ticket was found |
-| `AlreadyEscalated` | The ticket was already escalated and should not be escalated again |
-| `NotAuthorized` | The signed-in user does not own the ticket |
-
-## Escalation And Notification Logic
-
-Escalation is designed to be idempotent. That means the same ticket should not trigger repeated escalation updates or duplicate manager notifications.
-
-On successful escalation:
-
-- `Escalated` is set to true.
-- `EscalatedOn` is populated.
-- `EscalatedByAadObjectId` is recorded.
-- `EscalationReason` is stored.
-- `EscalationCount` is incremented.
-- `NotificationSent` is set to false so the watcher can process the notification.
-
-The watcher flow then sends or tracks the notification and marks `NotificationSent` true only after notification succeeds.
-
-## ALM / Solution Packaging Notes
-
-The intended solution name is `ITHelpdeskPortfolio`.
-
-Recommended ALM approach:
-
-- Build and test in an unmanaged development solution.
-- Use connection references for deployable flows.
-- Use environment variables for values that differ by environment.
-- Confirm Dataverse logical names before editing expressions.
-- Export and unpack the solution before committing platform artifacts.
-- Use managed solutions for test or production-style promotion.
-- Keep private notes and raw exports out of the public repo unless sanitized.
-
-Current ALM status should be treated as work in progress until solution export, import validation, and connection-reference checks are complete.
+Do not publish actual secret values, endpoint values, tenant URLs, subscription IDs, directory IDs, vault URIs, personal account details, private screenshots, or real ticket content.
