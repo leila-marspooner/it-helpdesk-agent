@@ -33,7 +33,7 @@ Core user journeys:
 
 ## Architecture
 
-![IT Helpdesk Agent architecture](architecture/it-helpdesk-agent-architecture.svg)
+![IT Helpdesk Agent architecture](architecture/IT-solution-Architecture.svg)
 
 Detailed architecture notes are available in [docs/architecture.md](docs/architecture.md).
 

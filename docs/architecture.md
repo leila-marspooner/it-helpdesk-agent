@@ -6,7 +6,7 @@ The IT Helpdesk Agent uses Copilot Studio, Power Automate, Dataverse, Microsoft 
 
 The architecture is built around trusted identity, Dataverse state tracking, idempotent watcher flows, Teams Adaptive Card write-back, and secure BYOM summarisation.
 
-See the public architecture diagram in [architecture/it-helpdesk-agent-architecture.svg](../architecture/it-helpdesk-agent-architecture.svg).
+See the public architecture diagram in [architecture/IT-solution-Architecture.svg](../architecture/IT-solution-Architecture.svg).
 
 ## High-Level Flow
 
