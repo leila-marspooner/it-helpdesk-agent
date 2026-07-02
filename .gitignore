@@ -1,0 +1,10 @@
+source-notes/
+.DS_Store
+*.docx
+*.pages
+*.key
+*.numbers
+.env
+.env.*
+*.log
+*.zip
