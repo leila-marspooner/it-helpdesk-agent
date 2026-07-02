@@ -56,6 +56,8 @@ Legacy variants such as `TKT-####` and `TKT--####` are excluded from the V2 publ
 
 `SummariseTicket_BYOM` is implemented as a child flow with a stable input contract. It accepts ticket context, calls Azure OpenAI / Azure AI Foundry, parses the response, and writes summary output back to Dataverse.
 
+Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
+
 Implementation details:
 
 - Environment-variable prompt abstraction through `lai_ITSD_SummarisationPrompt`.

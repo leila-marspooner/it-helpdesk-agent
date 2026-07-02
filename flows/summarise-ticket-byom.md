@@ -4,6 +4,8 @@
 
 `SummariseTicket_BYOM` is a child flow that generates ticket summaries using Azure OpenAI / Azure AI Foundry and writes the result back to Dataverse.
 
+Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
+
 ## Architecture
 
 The flow uses:

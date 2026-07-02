@@ -95,6 +95,8 @@ Notification state is tracked with fields such as `NotificationSent`, `Notificat
 
 `SummariseTicket_BYOM` is a child flow that creates ticket summaries using Azure OpenAI / Azure AI Foundry.
 
+Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
+
 The child flow uses:
 
 - A stable child-flow input contract.
