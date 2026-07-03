@@ -153,7 +153,6 @@ No values are published.
 
 ## Follow-Up Improvements
 
-- Add redacted screenshots to the public repo.
 - Add sanitized solution export evidence if appropriate.
 - Add public sample ticket data.
 - Add more detailed ALM deployment notes.

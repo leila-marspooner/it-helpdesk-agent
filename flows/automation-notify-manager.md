@@ -16,6 +16,12 @@ The idempotent pattern uses fields such as:
 
 This prevents repeated notification processing for the same escalation state.
 
+Evidence:
+
+- [Escalation watcher overview](../screenshots/escalation-watcher-flow-overview.png)
+- [Escalation watcher switch branches](../screenshots/escalation-watcher-flow-switch-branches.png)
+- [Escalation watcher default branch](../screenshots/escalation-watcher-flow-switch-default.png)
+
 ## Teams Adaptive Card Write-Back
 
 The notification card supports manager acknowledgement. Acknowledgement actions write back to Dataverse fields such as:
@@ -25,6 +31,8 @@ The notification card supports manager acknowledgement. Acknowledgement actions 
 - `AcknowledgedByDisplayName`
 - `AcknowledgedByEmail`
 - `CardSentOn`
+
+Evidence: [Teams Adaptive Card urgent escalation screenshot](../screenshots/teams-adaptive-card-urgent-escalation.webp).
 
 ## Error Tracking
 

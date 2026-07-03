@@ -146,9 +146,31 @@ Azure OpenAI configuration is externalised through environment variables. The AP
 | Field-Level Security / RBAC design | Built |
 | ALM packaging approach | Documented |
 
-## Screenshots And Demo Evidence
+## Screenshots / Evidence
 
-Redacted screenshots and demo assets can be added under `screenshots/` when they are public-safe. Do not publish unredacted Azure screenshots. Redact vault URIs, subscription IDs, directory IDs, tenant names, resource group names, endpoint URLs, and account details.
+The screenshots below are redacted public demo evidence. They show the main build areas without publishing tenant URLs, personal emails, environment IDs, secrets, API keys, tokens, endpoint values, or private ticket content.
+
+![Architecture diagram](architecture/IT-solution-Architecture.svg)
+
+![Ticket created in IT Support (Portfolio)](screenshots/it-support-copilot-chat-ticket-created.png)
+
+![Helper - Escalate Ticket flow](screenshots/power-automate-escalate-ticket-flow-full.png)
+
+![SummariseTicket_BYOM child flow](screenshots/summarise-ticket-byom-child-flow-overview.png)
+
+![Escalation watcher flow overview](screenshots/escalation-watcher-flow-overview.png)
+
+![Teams Adaptive Card urgent escalation](screenshots/teams-adaptive-card-urgent-escalation.webp)
+
+![Dataverse IT Ticket table](screenshots/dataverse-it-ticket-table.webp)
+
+![IT Technician Console urgent escalations view](screenshots/it-technician-console-urgent-escalations-view.png)
+
+![Column security profile permissions](screenshots/column-security-profile-managers-permissions.png)
+
+![Copilot Studio authentication settings](screenshots/copilot-studio-authentication-settings.png)
+
+See the full [screenshot gallery](screenshots/README.md) for additional redacted evidence.
 
 ## Documentation
 
@@ -164,12 +186,11 @@ Redacted screenshots and demo assets can be added under `screenshots/` when they
 .
 ├── agents/          # Sanitized agent notes or exports, when public-ready
 ├── architecture/    # Public architecture diagram and architecture notes
-├── assets/          # Public supporting assets
 ├── dataverse/       # Public Dataverse schema documentation
 ├── demo/            # Public demo assets, when prepared
 ├── docs/            # Public project documentation
 ├── flows/           # Public Power Automate flow documentation
-└── screenshots/     # Redacted public screenshots, when added
+└── screenshots/     # Redacted public screenshots and evidence gallery
 ```
 
 ## Portfolio Disclaimer

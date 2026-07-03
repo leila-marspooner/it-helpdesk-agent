@@ -8,6 +8,8 @@ The architecture is built around trusted identity, Dataverse state tracking, ide
 
 See the public architecture diagram in [architecture/IT-solution-Architecture.svg](../architecture/IT-solution-Architecture.svg).
 
+![IT Helpdesk Agent architecture](../architecture/IT-solution-Architecture.svg)
+
 ## High-Level Flow
 
 ```text

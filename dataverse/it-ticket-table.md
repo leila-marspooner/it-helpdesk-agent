@@ -6,6 +6,8 @@
 
 Ticket references use `TKT####`, for example `TKT1001`.
 
+Evidence: [Dataverse IT Ticket table screenshot](../screenshots/dataverse-it-ticket-table.webp).
+
 ## User-Facing / Ticket Fields
 
 - `TicketID`

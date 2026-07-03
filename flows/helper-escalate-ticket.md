@@ -24,6 +24,8 @@ Called from `IT Support (Portfolio)`.
 6. Update Dataverse escalation fields.
 7. Return a clear outcome to Copilot Studio.
 
+Evidence: [Helper - Escalate Ticket flow screenshot](../screenshots/power-automate-escalate-ticket-flow-full.png).
+
 ## Outcomes
 
 - `InvalidFormat`
@@ -31,6 +33,8 @@ Called from `IT Support (Portfolio)`.
 - `AlreadyEscalated`
 - `NotAuthorized`
 - `Success`
+
+Evidence: [AlreadyEscalated response screenshot](../screenshots/escalate-ticket-already-escalated.png).
 
 ## Dataverse Updates
 

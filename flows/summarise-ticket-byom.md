@@ -18,6 +18,8 @@ The flow uses:
 - TRY/CATCH fallback summary if the model call fails.
 - Dataverse summary write-back.
 
+Evidence: [SummariseTicket_BYOM child flow screenshot](../screenshots/summarise-ticket-byom-child-flow-overview.png).
+
 ## Environment Variables
 
 The repo may safely list variable names, but it must not contain values.
