@@ -1,8 +1,8 @@
-# SLA Watcher / Escalation Watcher
+# SLA_Watcher_Escalations
 
 ## Purpose
 
-The SLA watcher / SLA escalation watcher monitors ticket state and supports reminder and director escalation patterns.
+`SLA_Watcher_Escalations` monitors ticket state and supports reminder and director escalation patterns.
 
 ## Dataverse Fields
 

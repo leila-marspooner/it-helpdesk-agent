@@ -4,8 +4,6 @@
 
 `SummariseTicket_BYOM` is a child flow that generates ticket summaries using Azure OpenAI / Azure AI Foundry and writes the result back to Dataverse.
 
-Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
-
 ## Architecture
 
 The flow uses:
@@ -22,7 +20,7 @@ Evidence: [SummariseTicket_BYOM child flow screenshot](../screenshots/summarise-
 
 ## Environment Variables
 
-The repo may safely list variable names, but it must not contain values.
+Variable names are documented publicly; values are never published.
 
 - `lai_AOAI_ApiKey`
 - `lai_AOAI_ApiVersion`
@@ -30,9 +28,7 @@ The repo may safely list variable names, but it must not contain values.
 - `lai_AOAI_Endpoint`
 - `lai_ITSD_SummarisationPrompt`
 
-Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
-
-The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
+The API key is handled as a secure secret through Azure Key Vault / Power Platform secret environment variables, retrieved at runtime, and never hardcoded in flows, documentation, screenshots, or source files.
 
 ## Dataverse Write-Back
 

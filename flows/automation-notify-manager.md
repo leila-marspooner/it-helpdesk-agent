@@ -1,8 +1,10 @@
-# Automation - Notify Manager
+# IT Ticket: Automation – Escalation Watcher (Card + Writeback)
 
 ## Purpose
 
-`Automation - Notify Manager` sends Teams Adaptive Card notifications for escalated tickets and tracks notification state in Dataverse.
+Manager notification is handled by the escalation watcher flow, shown in the repo as `IT Ticket: Automation – Escalation Watcher (Card + Writeback)`. It sends Teams Adaptive Card notifications for escalated tickets and tracks notification state in Dataverse.
+
+`Automation - Notify Manager` is earlier shorthand for this manager-notification pattern.
 
 ## Trigger Pattern
 

@@ -56,8 +56,6 @@ Legacy variants such as `TKT-####` and `TKT--####` are excluded from the V2 publ
 
 `SummariseTicket_BYOM` is implemented as a child flow with a stable input contract. It accepts ticket context, calls Azure OpenAI / Azure AI Foundry, parses the response, and writes summary output back to Dataverse.
 
-Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
-
 Implementation details:
 
 - Environment-variable prompt abstraction through `lai_ITSD_SummarisationPrompt`.
@@ -68,13 +66,11 @@ Implementation details:
 - TRY/CATCH fallback summary if the model call fails.
 - Dataverse write-back to `TicketSummary`, `SummaryGeneratedOn`, `SummarySource`, and `SummaryError`.
 
-Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
-
-The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
+The API key is handled as a secure secret through Azure Key Vault / Power Platform secret environment variables, retrieved at runtime, and never hardcoded in flows, documentation, screenshots, or source files.
 
 ## Environment Variables
 
-Variable names may be documented publicly; values must not be published.
+Variable names are documented publicly; values are never published.
 
 | Variable | Purpose |
 | --- | --- |
@@ -96,11 +92,11 @@ Expected outcomes:
 - `NotAuthorized`
 - `Success`
 
-`Automation - Notify Manager` uses Dataverse state flags such as `NotificationSent` and escalation fields to support idempotent notification behavior. Teams Adaptive Card acknowledgement writes manager response data back to Dataverse.
+The escalation watcher, `IT Ticket: Automation – Escalation Watcher (Card + Writeback)`, uses Dataverse state flags such as `NotificationSent` and escalation fields to support idempotent notification behavior. Teams Adaptive Card acknowledgement writes manager response data back to Dataverse.
 
 ## SLA Watcher Design
 
-The SLA watcher / SLA escalation watcher monitors ticket state and tracks reminder and director escalation data.
+`SLA_Watcher_Escalations` monitors ticket state and tracks reminder and director escalation data.
 
 Relevant fields:
 
@@ -127,11 +123,11 @@ The watcher pattern is designed for repeat-safe automation and audit-ready Datav
 | `Helper - Create Ticket` | Creates ticket rows and stores requestor identity |
 | `Helper - Check Status` | Returns ticket details after ownership validation |
 | `Helper - Escalate Ticket` | Validates and escalates urgent tickets |
-| `Automation - Notify Manager` | Sends Teams Adaptive Cards and tracks notification state |
+| `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` | Sends Teams Adaptive Cards and tracks notification state |
 | `SummariseTicket_BYOM` | Generates and writes BYOM summaries |
-| SLA watcher / SLA escalation watcher | Tracks reminder and escalation conditions |
+| `SLA_Watcher_Escalations` | Tracks reminder and escalation conditions |
 
-The run-only connection binding issue was addressed by using the maker-owned connection, so Copilot-triggered flows can run consistently.
+Copilot-triggered flows use a maker-owned connection binding so they run consistently for signed-in users; production deployment would use service-owned connections through connection references.
 
 ## Governance And ALM Notes
 

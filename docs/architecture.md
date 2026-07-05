@@ -14,7 +14,7 @@ See the public architecture diagram in [architecture/IT-solution-Architecture.sv
 
 ```text
 Signed-in user
-  -> IT Support (Portfolio)
+  -> IT Support Assistant (Copilot Studio)
   -> Power Automate helper flows
   -> Dataverse IT Ticket / IT Tickets
   -> Teams Adaptive Cards / Technician Console / SLA watchers
@@ -24,7 +24,7 @@ Signed-in user
 
 ## Copilot Studio Layer
 
-`IT Support (Portfolio)` provides the authenticated V2 agent experience.
+The Copilot Studio agent (display name `IT Support Assistant`) provides the authenticated V2 agent experience.
 
 Built capabilities:
 
@@ -46,9 +46,9 @@ Built flows:
 - `Helper - Create Ticket`
 - `Helper - Check Status`
 - `Helper - Escalate Ticket`
-- `Automation - Notify Manager`
+- `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` — manager notification and Teams write-back
 - `SummariseTicket_BYOM`
-- SLA watcher / SLA escalation watcher
+- `SLA_Watcher_Escalations`
 
 Power Automate is responsible for Dataverse writes, ownership validation, manager notifications, acknowledgement write-back, SLA monitoring, and AI summary generation.
 
@@ -82,7 +82,7 @@ This model prevents users from relying on typed email addresses for authorizatio
 
 ## Teams Adaptive Card Write-Back
 
-`Automation - Notify Manager` sends Teams Adaptive Cards for escalation visibility and manager acknowledgement.
+Manager notification is handled by the escalation watcher flow, `IT Ticket: Automation – Escalation Watcher (Card + Writeback)`, which sends Teams Adaptive Cards for escalation visibility and manager acknowledgement.
 
 The acknowledgement action writes back to Dataverse fields such as:
 
@@ -97,8 +97,6 @@ Notification state is tracked with fields such as `NotificationSent`, `Notificat
 
 `SummariseTicket_BYOM` is a child flow that creates ticket summaries using Azure OpenAI / Azure AI Foundry.
 
-Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
-
 The child flow uses:
 
 - A stable child-flow input contract.
@@ -109,13 +107,11 @@ The child flow uses:
 - TRY/CATCH fallback summary behavior.
 - Dataverse write-back to summary fields.
 
-Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
-
-The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
+Configuration is externalised through environment variables — endpoint, deployment name, API version, and summarisation prompt. The API key is handled as a secure secret through Azure Key Vault / Power Platform secret environment variables, retrieved at runtime, and never hardcoded or committed.
 
 ## SLA Watcher And Director Escalation
 
-The SLA watcher / SLA escalation watcher monitors ticket state and supports reminder and escalation patterns.
+`SLA_Watcher_Escalations` monitors ticket state and supports reminder and director escalation patterns.
 
 Relevant Dataverse fields include:
 

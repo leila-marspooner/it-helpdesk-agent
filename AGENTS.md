@@ -8,13 +8,16 @@ Keep documentation professional, recruiter-friendly, and honest. Do not overclai
 
 Preserve project terminology, including:
 
-- IT Support (Portfolio)
+- IT Helpdesk Agent (public project name)
+- IT Support Assistant (Copilot Studio agent display name)
 - ITHelpdeskPortfolio
 - IT Technician Console
 - Helper - Create Ticket
 - Helper - Check Status
 - Helper - Escalate Ticket
-- Automation - Notify Manager
+- IT Ticket: Automation – Escalation Watcher (Card + Writeback) (with `Automation - Notify Manager` as earlier shorthand)
+- SLA_Watcher_Escalations
+- SummariseTicket_BYOM
 - TKT####
 - RequestorAadObjectId
 - CurrentUserAadObjectId

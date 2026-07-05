@@ -6,7 +6,7 @@
 
 ## Trigger
 
-Called from `IT Support (Portfolio)`.
+Called from the `IT Support Assistant` Copilot Studio agent.
 
 ## Inputs
 

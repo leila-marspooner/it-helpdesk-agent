@@ -17,7 +17,7 @@ This project demonstrates a V2 authenticated helpdesk agent that uses signed-in 
 
 ## Solution Overview
 
-The solution is centered on the Copilot Studio agent `IT Support (Portfolio)` inside the Power Platform solution `ITHelpdeskPortfolio` using publisher prefix `lai`.
+**IT Helpdesk Agent** is the public portfolio project name. The Copilot Studio agent shown in screenshots uses the display name `IT Support Assistant`, packaged in the Power Platform solution `ITHelpdeskPortfolio` using publisher prefix `lai`.
 
 The user-facing ticket format is `TKT####`, for example `TKT1001`.
 
@@ -63,7 +63,7 @@ Detailed architecture notes are available in [docs/architecture.md](docs/archite
 
 ### Copilot Studio
 
-- `IT Support (Portfolio)` authenticated V2 experience.
+- `IT Support Assistant` authenticated V2 experience.
 - Entra ID / organizational sign-in configured and tested.
 - Identity-based user context built and tested.
 - Structured ticket intake.
@@ -76,9 +76,9 @@ Detailed architecture notes are available in [docs/architecture.md](docs/archite
 - `Helper - Create Ticket`
 - `Helper - Check Status`
 - `Helper - Escalate Ticket`
-- `Automation - Notify Manager`
+- `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` — manager notification and Teams write-back
 - `SummariseTicket_BYOM`
-- SLA watcher / SLA escalation watcher
+- `SLA_Watcher_Escalations`
 
 ### Dataverse
 
@@ -92,15 +92,11 @@ Manager notifications use Teams Adaptive Cards. Acknowledgement actions write ba
 
 `SummariseTicket_BYOM` calls Azure OpenAI / Azure AI Foundry through Power Automate and writes summary output back to Dataverse.
 
-Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
-
-Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
-
-The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
+Configuration is externalised through environment variables — endpoint, deployment name, API version, and summarisation prompt. The API key is handled as a secure secret through Azure Key Vault / Power Platform secret environment variables, retrieved at runtime, and never hardcoded in flows, documentation, screenshots, or source files.
 
 ## Environment Variables
 
-The repo may document variable names, but it must not contain values.
+Variable names are documented below; values are never published.
 
 | Variable | Purpose |
 | --- | --- |
@@ -109,8 +105,6 @@ The repo may document variable names, but it must not contain values.
 | `lai_AOAI_DeploymentName` | Azure OpenAI deployment name |
 | `lai_AOAI_Endpoint` | Azure OpenAI endpoint |
 | `lai_ITSD_SummarisationPrompt` | Prompt used by the summarisation child flow |
-
-Azure OpenAI configuration is externalised through environment variables. The API key is handled as a secure secret configuration and retrieved at runtime, so it is not hardcoded in the flow or committed to the repository.
 
 ## Security And Governance
 
@@ -137,11 +131,11 @@ Azure OpenAI configuration is externalised through environment variables. The AP
 | `Helper - Create Ticket` | Built |
 | `Helper - Check Status` | Built |
 | `Helper - Escalate Ticket` | Built |
-| `Automation - Notify Manager` | Built |
+| `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` | Built |
 | Teams Adaptive Card acknowledgement write-back | Built |
 | `SummariseTicket_BYOM` | Built |
 | Azure OpenAI secure configuration pattern | Built |
-| SLA watcher / escalation watcher | Built |
+| `SLA_Watcher_Escalations` | Built |
 | `IT Technician Console` | Built |
 | Field-Level Security / RBAC design | Built |
 | ALM packaging approach | Documented |
@@ -150,27 +144,14 @@ Azure OpenAI configuration is externalised through environment variables. The AP
 
 The screenshots below are redacted public demo evidence. They show the main build areas without publishing tenant URLs, personal emails, environment IDs, secrets, API keys, tokens, endpoint values, or private ticket content.
 
-![Architecture diagram](architecture/IT-solution-Architecture.svg)
+| | |
+| --- | --- |
+| **Ticket created via the authenticated agent** ![Ticket created chat confirmation](screenshots/it-support-copilot-chat-ticket-created.png) | **Teams Adaptive Card — urgent escalation** ![Teams Adaptive Card urgent escalation](screenshots/teams-adaptive-card-urgent-escalation.webp) |
+| **Helper - Escalate Ticket flow** ![Helper - Escalate Ticket flow](screenshots/power-automate-escalate-ticket-flow-full.png) | **SummariseTicket_BYOM child flow** ![SummariseTicket_BYOM child flow](screenshots/summarise-ticket-byom-child-flow-overview.png) |
+| **Escalation watcher with Teams write-back** ![Escalation watcher flow overview](screenshots/escalation-watcher-flow-overview.png) | **Dataverse IT Ticket table** ![Dataverse IT Ticket table](screenshots/dataverse-it-ticket-table.webp) |
+| **IT Technician Console — urgent escalations** ![IT Technician Console urgent escalations view](screenshots/it-technician-console-urgent-escalations-view.png) | **Field-Level Security profile** ![Column security profile permissions](screenshots/column-security-profile-managers-permissions.png) |
 
-![Ticket created in IT Support (Portfolio)](screenshots/it-support-copilot-chat-ticket-created.png)
-
-![Helper - Escalate Ticket flow](screenshots/power-automate-escalate-ticket-flow-full.png)
-
-![SummariseTicket_BYOM child flow](screenshots/summarise-ticket-byom-child-flow-overview.png)
-
-![Escalation watcher flow overview](screenshots/escalation-watcher-flow-overview.png)
-
-![Teams Adaptive Card urgent escalation](screenshots/teams-adaptive-card-urgent-escalation.webp)
-
-![Dataverse IT Ticket table](screenshots/dataverse-it-ticket-table.webp)
-
-![IT Technician Console urgent escalations view](screenshots/it-technician-console-urgent-escalations-view.png)
-
-![Column security profile permissions](screenshots/column-security-profile-managers-permissions.png)
-
-![Copilot Studio authentication settings](screenshots/copilot-studio-authentication-settings.png)
-
-See the full [screenshot gallery](screenshots/README.md) for additional redacted evidence.
+See the full [screenshot gallery](screenshots/README.md) for additional redacted evidence, including Copilot Studio topics, authentication settings, and security roles.
 
 ## Documentation
 

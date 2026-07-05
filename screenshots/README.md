@@ -1,16 +1,14 @@
 # Screenshot Gallery
 
-This folder contains redacted public demo evidence for the IT Helpdesk Agent portfolio project.
+This folder contains redacted public demo evidence for the IT Helpdesk Agent portfolio project. All ticket content shown is fictional demo data.
 
-Do not publish screenshots that show tenant URLs, personal emails, environment IDs, secrets, API keys, tokens, private user data, real ticket content, endpoint URLs, subscription IDs, directory IDs, vault URIs, or personal account details.
+IT Helpdesk Agent is the public portfolio project name. The Copilot Studio agent shown in these screenshots uses the display name `IT Support Assistant`.
 
-Do not publish unredacted Azure screenshots. Redact vault URIs, subscription IDs, directory IDs, tenant names, resource group names, endpoint URLs, and account details.
-
-If adding an Azure Key Vault screenshot, use only a redacted version. The screenshot must not show vault URIs, subscription IDs, directory IDs, tenant or directory names, personal names, private resource group names, secret values, or secret names that should not be public.
+Screenshots must never show tenant URLs, personal emails, environment IDs, secrets, API keys, tokens, private user data, real ticket content, endpoint URLs, subscription IDs, directory IDs, vault URIs, or personal account details. Azure screenshots (including any Key Vault evidence) are published only after redacting vault URIs, subscription IDs, directory IDs, tenant and resource group names, endpoint URLs, and account details.
 
 ## User Experience
 
-- [Chat log ticket](it-support-copilot-chat-log-ticket.png) - Shows the user journey for logging a ticket through `IT Support (Portfolio)`.
+- [Chat log ticket](it-support-copilot-chat-log-ticket.png) - Shows the user journey for logging a ticket through `IT Support Assistant`.
 - [Ticket created](it-support-copilot-chat-ticket-created.png) - Shows the agent returning a `TKT####` reference after ticket creation.
 - [Check status](it-support-copilot-chat-check-status.png) - Shows the signed-in user checking ticket status.
 - [Escalation confirmed](it-support-copilot-chat-escalate-confirmed.png) - Shows the user-facing confirmation after an urgent escalation.
@@ -19,7 +17,7 @@ If adding an Azure Key Vault screenshot, use only a redacted version. The screen
 
 ## Copilot Studio
 
-- [Agent overview](copilot-studio-agent-overview.png) - Shows the `IT Support (Portfolio)` agent in Copilot Studio.
+- [Agent overview](copilot-studio-agent-overview.png) - Shows the `IT Support Assistant` agent in Copilot Studio.
 - [Custom topics](copilot-studio-agent-custom-topics.png) - Shows the custom topic set for the agent.
 - [Authentication settings](copilot-studio-authentication-settings.png) - Shows the authenticated Entra ID / organizational sign-in configuration with sensitive values redacted.
 - [Log ticket topic](copilot-topic-log-a-ticket-full-flow.png) - Shows the full structured ticket intake topic.

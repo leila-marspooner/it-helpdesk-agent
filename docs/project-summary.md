@@ -2,7 +2,7 @@
 
 ## Purpose
 
-IT Helpdesk Agent is a V2-only Power Platform / Copilot Studio portfolio project. It demonstrates an authenticated IT support agent that creates tickets, checks ticket status, escalates urgent issues, sends Teams Adaptive Card notifications, writes acknowledgement actions back to Dataverse, and generates BYOM Azure OpenAI ticket summaries.
+IT Helpdesk Agent is an authenticated (V2) Power Platform / Copilot Studio portfolio project. It demonstrates an authenticated IT support agent that creates tickets, checks ticket status, escalates urgent issues, sends Teams Adaptive Card notifications, writes acknowledgement actions back to Dataverse, and generates BYOM Azure OpenAI ticket summaries.
 
 The project is a portfolio/demo project demonstrating production-aligned patterns, not a live production ITSM system.
 
@@ -11,11 +11,13 @@ The project is a portfolio/demo project demonstrating production-aligned pattern
 | Item | Value |
 | --- | --- |
 | Repo / project name | IT Helpdesk Agent |
-| Agent name | `IT Support (Portfolio)` |
+| Copilot Studio agent display name | `IT Support Assistant` |
 | Solution name | `ITHelpdeskPortfolio` |
 | Publisher prefix | `lai` |
 | Dataverse table | `IT Ticket` / `IT Tickets` |
 | Ticket format | `TKT####`, for example `TKT1001` |
+
+IT Helpdesk Agent is the public portfolio project name. The Copilot Studio agent shown in screenshots uses the display name `IT Support Assistant`.
 
 Legacy ticket formats such as `TKT-####` and `TKT--####` are excluded from this public V2 documentation except where explicitly marked as legacy.
 
@@ -31,21 +33,21 @@ Legacy ticket formats such as `TKT-####` and `TKT--####` are excluded from this 
 ## Built V2 User Journeys
 
 1. User signs in through Entra ID / organizational sign-in.
-2. User logs a ticket through `IT Support (Portfolio)`.
+2. User logs a ticket through `IT Support Assistant`.
 3. `Helper - Create Ticket` creates a Dataverse `IT Ticket` row.
 4. User receives a `TKT####` ticket reference.
 5. User checks ticket status.
 6. `Helper - Check Status` compares `RequestorAadObjectId` with `CurrentUserAadObjectId`.
 7. User escalates an urgent ticket.
 8. `Helper - Escalate Ticket` validates ownership and escalation state.
-9. `Automation - Notify Manager` sends a Teams Adaptive Card.
+9. The escalation watcher, `IT Ticket: Automation – Escalation Watcher (Card + Writeback)`, sends a Teams Adaptive Card.
 10. Acknowledgement actions write back to Dataverse.
 11. `SummariseTicket_BYOM` generates a summary and writes it to Dataverse.
 12. SLA watcher automation tracks reminder and escalation conditions.
 
 ## Agent Behaviour
 
-`IT Support (Portfolio)` is designed as a secure internal IT assistant.
+`IT Support Assistant` is designed as a secure internal IT assistant.
 
 Built behavior:
 
@@ -75,9 +77,9 @@ Built behavior:
 - `Helper - Create Ticket`
 - `Helper - Check Status`
 - `Helper - Escalate Ticket`
-- `Automation - Notify Manager`
+- `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` — manager notification and Teams write-back
 - `SummariseTicket_BYOM`
-- SLA watcher / SLA escalation watcher
+- `SLA_Watcher_Escalations`
 
 ## Dataverse Summary
 
@@ -98,11 +100,7 @@ See [dataverse/it-ticket-table.md](../dataverse/it-ticket-table.md) for the grou
 
 `SummariseTicket_BYOM` is a Power Automate child flow that sends ticket content to Azure OpenAI / Azure AI Foundry and writes a summary back to Dataverse.
 
-Azure OpenAI / Azure AI Foundry provides the BYOM model deployment and API key used by the summarisation flow. The API key value is never documented or committed.
-
-Azure OpenAI configuration is externalised through environment variables, including endpoint, deployment name, API version, and summarisation prompt.
-
-The Azure OpenAI API key is handled through secure secret configuration using Azure Key Vault / Power Platform secret environment variables. The key is retrieved at runtime and is not hardcoded in Power Automate flows, documentation, screenshots, or source files.
+Configuration is externalised through environment variables — endpoint, deployment name, API version, and summarisation prompt. The API key is handled as a secure secret through Azure Key Vault / Power Platform secret environment variables, retrieved at runtime, and never hardcoded or committed.
 
 Environment variable names documented in this repo:
 
@@ -142,11 +140,11 @@ No values are published.
 | `Helper - Create Ticket` | Built |
 | `Helper - Check Status` | Built |
 | `Helper - Escalate Ticket` | Built |
-| `Automation - Notify Manager` | Built |
+| `IT Ticket: Automation – Escalation Watcher (Card + Writeback)` | Built |
 | Teams Adaptive Card acknowledgement write-back | Built |
 | `SummariseTicket_BYOM` | Built |
 | Azure OpenAI secure configuration pattern | Built |
-| SLA watcher / escalation watcher | Built |
+| `SLA_Watcher_Escalations` | Built |
 | `IT Technician Console` | Built |
 | RBAC / Field-Level Security design | Built |
 | ALM approach | Documented |
